@@ -34,10 +34,11 @@ export default function StackScreen() {
           headerTitle: () => (
             <Image
               source={logo}
-              style={{ width: 150, height: 40 }} // Sesuaikan ukuran logo sesuai kebutuhan
+              style={{ width: 150, height: 40, }} // Sesuaikan ukuran logo sesuai kebutuhan
               resizeMode="contain"
             />
           ),
+          // headerTransparent: true,
         }}
       />
     </Stack.Navigator>
