@@ -16,6 +16,7 @@ export default function LoginForm({ navigation }) {
   const handleLogin = () => {
     // Lakukan sesuatu saat tombol login ditekan
     console.log("Login button pressed!");
+    navigation.navigate("SoulConnect");
   };
 
   return (
