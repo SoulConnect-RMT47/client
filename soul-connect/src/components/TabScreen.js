@@ -25,7 +25,7 @@ export default function TabScreen() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
+            <Ionicons name="home-outline" color={color} size={size} />
           ),
           headerShown: false,
         }}
@@ -35,7 +35,7 @@ export default function TabScreen() {
         component={LikeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart" color={color} size={size} /> // Mengubah ikon menjadi gambar love
+            <Ionicons name="heart-outline" color={color} size={size} /> // Mengubah ikon menjadi gambar love
           ),
           headerShown: false,
         }}
@@ -45,7 +45,7 @@ export default function TabScreen() {
         component={ChatScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles" color={color} size={size} /> // Mengubah ikon menjadi icon chat
+            <Ionicons name="chatbubbles-outline" color={color} size={size} /> // Mengubah ikon menjadi icon chat
           ),
           headerShown: false,
         }}
@@ -55,7 +55,7 @@ export default function TabScreen() {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" color={color} size={size} />
+            <Ionicons name="person-outline" color={color} size={size} />
           ),
           headerShown: false,
         }}
