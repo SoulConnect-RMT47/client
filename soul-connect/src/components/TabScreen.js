@@ -9,6 +9,7 @@ import EditScreen from "../screens/EditScreen";
 import HomeScreen from "../screens/HomeScreen";
 import LikeScreen from "../screens/LikeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import Friendlist from "../screens/FriendList";
 
 export default function TabScreen() {
   return (
@@ -63,6 +64,14 @@ export default function TabScreen() {
       <Tab.Screen
         name="EditScreen"
         component={EditScreen}
+        options={{
+          headerShown: false,
+          tabBarButton: () => null, // Menyembunyikan tab dari bottom tab
+        }}
+      />
+      <Tab.Screen
+        name="FriendList"
+        component={Friendlist}
         options={{
           headerShown: false,
           tabBarButton: () => null, // Menyembunyikan tab dari bottom tab

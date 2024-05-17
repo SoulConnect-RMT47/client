@@ -17,7 +17,9 @@ export default function ProfileScreen({ navigation }) {
       <View style={styles.profileHeader}>
         <Image
           style={styles.profileImage}
-          source={{ uri: "https://via.placeholder.com/150" }} // Replace with actual image URL
+          source={{
+            uri: "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
+          }} // Replace with actual image URL
         />
         <Text style={styles.profileName}>Reza Arga, 22</Text>
       </View>
@@ -53,6 +55,12 @@ export default function ProfileScreen({ navigation }) {
             editable={false}
           />
         </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("FriendList")}
+          style={styles.friendListButton}
+        >
+          <Text style={styles.friendListButtonText}>Friends List</Text>
+        </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.logoutButton}>
         <Text style={styles.logoutButtonText}>Log Out</Text>
@@ -119,6 +127,19 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#ffffff", // Ensure background is white
     marginTop: 5,
+  },
+  friendListButton: {
+    backgroundColor: "#ffffff", // Changed background to white
+    borderWidth: 1,
+    borderColor: "#AA3FEC", // Purple border color
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 15, // Adjusted margin bottom
+  },
+  friendListButtonText: {
+    color: "#AA3FEC", // Changed text color to purple
+    fontSize: 16,
   },
   logoutButton: {
     backgroundColor: "#AA3FEC",
