@@ -59,7 +59,7 @@ export default function ProfileScreen({ navigation }) {
           onPress={() => navigation.navigate("FriendList")}
           style={styles.friendListButton}
         >
-          <Text style={styles.friendListButtonText}>Friends List</Text>
+          <Text style={styles.friendListButtonText}>Friend List</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.logoutButton}>

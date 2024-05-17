@@ -13,6 +13,9 @@ export default function EditScreen({ navigation }) {
   const [bio, setBio] = useState("A brief bio about Reza Arga");
   const [age, setAge] = useState("22");
   const [email, setEmail] = useState("abcqwertyu@gmail.com");
+  const [imgUrl, setImgUrl] = useState(
+    "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg"
+  );
 
   const handleSave = () => {
     // Handle save logic here
@@ -53,6 +56,14 @@ export default function EditScreen({ navigation }) {
           style={styles.input}
           value={email}
           onChangeText={(text) => setEmail(text)}
+        />
+      </View>
+      <View style={styles.inputGroup}>
+        <Text style={styles.inputLabel}>Image URL</Text>
+        <TextInput
+          style={styles.input}
+          value={imgUrl}
+          onChangeText={(text) => setImgUrl(text)}
         />
       </View>
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
