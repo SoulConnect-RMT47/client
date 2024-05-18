@@ -10,6 +10,7 @@ import * as SecureStore from "expo-secure-store";
 import AuthContext from "../context/auth.js";
 
 export default function StackScreen() {
+	const [user, setUser] = useState(null);
 	const [isSignedIn, setIsSignedIn] = useState(false);
 
 	useEffect(() => {
@@ -30,6 +31,8 @@ export default function StackScreen() {
 			value={{
 				isSignedIn,
 				setIsSignedIn,
+				user,
+				setUser,
 			}}
 		>
 			<Stack.Navigator>

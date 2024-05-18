@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,24 +13,34 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import AuthContext from "../context/auth";
 
 export default function ProfileScreen({ navigation }) {
-  const auth = useContext(AuthContext);
+  const [user, setUser] = useState(null);
 
+  const auth = useContext(AuthContext);
+  
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync("access_token");
-    auth.setIsSignedIn(false)
-  }
+    auth.setIsSignedIn(false);
+  };
+  
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await SecureStore.getItemAsync("user");
+      setUser(JSON.parse(user));
+    }
+    getUser();
+  },[])
 
-  return (
+  return ( 
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Profile</Text>
       <View style={styles.profileHeader}>
         <Image
           style={styles.profileImage}
           source={{
-            uri: "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-          }} // Replace with actual image URL
+            uri: user?.imgUrl || "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
+          }}
         />
-        <Text style={styles.profileName}>Reza Arga, 22</Text>
+        <Text style={styles.profileName}>{user?.username}, {user?.age}</Text>
       </View>
       <View style={styles.accountSettings}>
         <Text style={styles.sectionTitle}>Account Settings</Text>
@@ -42,26 +52,40 @@ export default function ProfileScreen({ navigation }) {
         </TouchableOpacity>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Name</Text>
-          <TextInput style={styles.input} value="Reza Arga" editable={false} />
+          <TextInput style={styles.input} value={user?.name} editable={false} />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Bio</Text>
           <TextInput
-            style={styles.input}
-            value="A brief bio about Reza Arga"
+            style={styles.inputMultiline}
+            value={user?.bio}
             editable={false}
+            multiline={true}
+            textAlignVertical="top"
+            numberOfLines={3}
           />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Age</Text>
-          <TextInput style={styles.input} value="22" editable={false} />
+          <TextInput style={styles.input} value={String(user?.age)} editable={false} />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
             style={styles.input}
-            value="abcqwertyu@gmail.com"
+            value={user?.email}
             editable={false}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Preference</Text>
+          <TextInput
+            style={styles.inputMultiline}
+            value={user?.preference.join(", ")}
+            editable={false}
+            multiline={true}
+            textAlignVertical="top"
+            numberOfLines={2}
           />
         </View>
       </View>
@@ -128,9 +152,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    backgroundColor: "#ffffff", // Ensure background is white
+    backgroundColor: "#ffffff",
     marginTop: 5,
-    color:"black"
+    color: "black",
+  },
+  inputMultiline: {
+    height: 100,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: "#ffffff",
+    marginTop: 5,
+    color: "black",
   },
   friendListButton: {
     backgroundColor: "#ffffff", // Changed background to white

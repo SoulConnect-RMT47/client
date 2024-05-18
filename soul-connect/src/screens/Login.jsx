@@ -33,8 +33,7 @@ export default function LoginForm({ navigation }) {
       })
       await SecureStore.setItemAsync("access_token", response.data.token);
       auth.setIsSignedIn(true)
-      console.log(response.data.token);
-      // navigation.navigate("SoulConnect");
+      await SecureStore.setItemAsync("user", JSON.stringify(response.data.user));
     } catch (error) {
       console.log(error.response.data);
     }
