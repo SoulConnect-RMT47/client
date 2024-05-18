@@ -13,7 +13,9 @@ export default function LikeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>{usersArray.length}</Text>
+      <View style={styles.subContainer}>
+      <Text style={{fontSize:20 }} >Likes {usersArray.length}</Text>
+      </View>
       <FlatList
         data={groupedUsers}
         renderItem={({ item }) => (
@@ -39,6 +41,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f0f0f0",
+  },
+  subContainer:{
+    justifyContent: "center",
+    marginLeft: 20,
+    marginTop: 5,
   },
   contentContainer: {
     paddingHorizontal: 10,

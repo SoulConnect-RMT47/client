@@ -129,17 +129,17 @@ const styles = StyleSheet.create({
 		left: 24,
 	},
 	name: {
-		fontSize: 30,
+		fontSize: 25,
 		color: "white",
 		fontWeight: "400",
 	},
 	location: {
-		fontSize: 18,
+		fontSize: 15,
 		color: "white",
 		fontWeight: "300",
 	},
 	distance: {
-		fontSize: 18,
+		fontSize: 15,
 		color: "white",
 		fontWeight: "300",
 	},

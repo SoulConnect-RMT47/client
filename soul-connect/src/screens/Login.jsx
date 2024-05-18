@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,15 +8,36 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import AuthContext from "../context/auth";
 
 export default function LoginForm({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user1@mail.com");
+  const [password, setPassword] = useState("user1");
+  const auth = useContext(AuthContext);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Lakukan sesuatu saat tombol login ditekan
-    console.log("Login button pressed!");
-    navigation.navigate("SoulConnect");
+    try {
+      const response = await axios({
+        method: "POST", 
+        url: "https://soulconnect-server.habibmufti.online/users/login",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          email: email,
+          password: password,
+        }
+      })
+      await SecureStore.setItemAsync("access_token", response.data.token);
+      auth.setIsSignedIn(true)
+      console.log(response.data.token);
+      // navigation.navigate("SoulConnect");
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
 
   return (
@@ -57,7 +78,7 @@ export default function LoginForm({ navigation }) {
         <Text style={styles.googleText}>Sign In with Google</Text>
       </TouchableOpacity>
       <Text style={styles.registerText}>
-        If you don't have an account, please{" "}
+        doesn't have an account?{" "}
         <Text
           style={styles.registerLink}
           onPress={() => navigation.navigate("Register")}

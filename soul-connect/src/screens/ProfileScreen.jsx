@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,9 +8,18 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import * as SecureStore from "expo-secure-store";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import AuthContext from "../context/auth";
 
 export default function ProfileScreen({ navigation }) {
+  const auth = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    await SecureStore.deleteItemAsync("access_token");
+    auth.setIsSignedIn(false)
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Profile</Text>
@@ -56,7 +65,7 @@ export default function ProfileScreen({ navigation }) {
           />
         </View>
       </View>
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} >
         <Text style={styles.logoutButtonText}>Log Out</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -121,6 +130,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#ffffff", // Ensure background is white
     marginTop: 5,
+    color:"black"
   },
   friendListButton: {
     backgroundColor: "#ffffff", // Changed background to white
