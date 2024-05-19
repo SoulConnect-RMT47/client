@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,9 @@ import {
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useFocusEffect } from "@react-navigation/native";
 import AuthContext from "../context/auth";
+import axios from "axios";
 
 export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
@@ -22,13 +24,47 @@ export default function ProfileScreen({ navigation }) {
     auth.setIsSignedIn(false);
   };
 
-  useEffect(() => {
-    const getUser = async () => {
-      const user = await SecureStore.getItemAsync("user");
-      setUser(JSON.parse(user));
-    };
-    getUser();
+  const [input, setInput] = useState({
+    name: "",
+    bio: "",
+    age: "",
+    imgUrl: "",
+    email: "",
+    preference: [],
+  });
+
+  const getUser = useCallback(async () => {
+    const token = await SecureStore.getItemAsync("access_token");
+    const user = await SecureStore.getItemAsync("user");
+    const result = JSON.parse(user);
+    const userId = result._id;
+
+    try {
+      let { data } = await axios({
+        method: "GET",
+        url: `https://soulconnect-server.habibmufti.online/users/${userId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setInput({
+        name: data.name,
+        bio: data.bio,
+        age: data.age.toString(), // Convert age to string for TextInput
+        imgUrl: data.imgUrl,
+        email: data.email,
+        preference: data.preference || [],
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getUser();
+    }, [getUser])
+  );
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -38,31 +74,37 @@ export default function ProfileScreen({ navigation }) {
           style={styles.profileImage}
           source={{
             uri:
-              user?.imgUrl ||
+              input?.imgUrl ||
               "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
           }}
         />
         <Text style={styles.profileName}>
-          {user?.username}, {user?.age}
+          {input?.name}, {input?.age}
         </Text>
       </View>
       <View style={styles.accountSettings}>
         <Text style={styles.sectionTitle}>Account Settings</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate("EditScreen")}
+          onPress={() =>
+            navigation.navigate("EditScreen", { userId: user?._id })
+          }
           style={styles.editButton}
         >
           <Icon name="edit" size={24} color="#555" />
         </TouchableOpacity>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Name</Text>
-          <TextInput style={styles.input} value={user?.name} editable={false} />
+          <TextInput
+            style={styles.input}
+            value={input?.name}
+            editable={false}
+          />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Bio</Text>
           <TextInput
             style={styles.inputMultiline}
-            value={user?.bio}
+            value={input?.bio}
             editable={false}
             multiline={true}
             textAlignVertical="top"
@@ -71,17 +113,13 @@ export default function ProfileScreen({ navigation }) {
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Age</Text>
-          <TextInput
-            style={styles.input}
-            value={String(user?.age)}
-            editable={false}
-          />
+          <TextInput style={styles.input} value={input?.age} editable={false} />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
             style={styles.input}
-            value={user?.email}
+            value={input?.email}
             editable={false}
           />
         </View>
@@ -89,7 +127,7 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.inputLabel}>Preference</Text>
           <TextInput
             style={styles.inputMultiline}
-            value={user?.preference.join(", ")}
+            value={input.preference.join(", ")}
             editable={false}
             multiline={true}
             textAlignVertical="top"
@@ -107,7 +145,7 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#ffffff", // Changed background color to white
+    backgroundColor: "#ffffff",
     padding: 20,
   },
   header: {
@@ -131,7 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   accountSettings: {
-    backgroundColor: "#ffffff", // Changed background color to white
+    backgroundColor: "#ffffff",
     padding: 20,
     borderRadius: 10,
     position: "relative",
@@ -151,8 +189,8 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    color: "#333", // Changed color to a darker shade
-    backgroundColor: "#ffffff", // Ensure background is white
+    color: "#333",
+    backgroundColor: "#ffffff",
   },
   input: {
     height: 40,
@@ -175,16 +213,16 @@ const styles = StyleSheet.create({
     color: "black",
   },
   friendListButton: {
-    backgroundColor: "#ffffff", // Changed background to white
+    backgroundColor: "#ffffff",
     borderWidth: 1,
-    borderColor: "#AA3FEC", // Purple border color
+    borderColor: "#AA3FEC",
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
-    marginBottom: 15, // Adjusted margin bottom
+    marginBottom: 15,
   },
   friendListButtonText: {
-    color: "#AA3FEC", // Changed text color to purple
+    color: "#AA3FEC",
     fontSize: 16,
   },
   logoutButton: {
@@ -192,7 +230,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 30,
     alignItems: "center",
-    marginBottom: 50, // Reduced bottom margin
+    marginBottom: 50,
   },
   logoutButtonText: {
     color: "#fff",
