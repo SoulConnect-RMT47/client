@@ -16,31 +16,35 @@ export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
 
   const auth = useContext(AuthContext);
-  
+
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync("access_token");
     auth.setIsSignedIn(false);
   };
-  
+
   useEffect(() => {
     const getUser = async () => {
       const user = await SecureStore.getItemAsync("user");
       setUser(JSON.parse(user));
-    }
+    };
     getUser();
-  },[])
+  }, []);
 
-  return ( 
+  return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Profile</Text>
       <View style={styles.profileHeader}>
         <Image
           style={styles.profileImage}
           source={{
-            uri: user?.imgUrl || "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
+            uri:
+              user?.imgUrl ||
+              "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
           }}
         />
-        <Text style={styles.profileName}>{user?.username}, {user?.age}</Text>
+        <Text style={styles.profileName}>
+          {user?.username}, {user?.age}
+        </Text>
       </View>
       <View style={styles.accountSettings}>
         <Text style={styles.sectionTitle}>Account Settings</Text>
@@ -67,7 +71,11 @@ export default function ProfileScreen({ navigation }) {
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Age</Text>
-          <TextInput style={styles.input} value={String(user?.age)} editable={false} />
+          <TextInput
+            style={styles.input}
+            value={String(user?.age)}
+            editable={false}
+          />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Email</Text>
@@ -89,7 +97,7 @@ export default function ProfileScreen({ navigation }) {
           />
         </View>
       </View>
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} >
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Log Out</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -182,7 +190,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     backgroundColor: "#AA3FEC",
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 30,
     alignItems: "center",
     marginBottom: 50, // Reduced bottom margin
   },
