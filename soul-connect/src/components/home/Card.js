@@ -14,6 +14,7 @@ const { width, height } = Dimensions.get("screen");
 
 const Card = ({
   name,
+  input,
   location,
   age,
   image,
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 10,
+    borderColor: "black"
   },
   image: {
     width: width * 0.8,
