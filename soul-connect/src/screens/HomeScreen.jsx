@@ -68,7 +68,7 @@ export default function HomeScreen({ navigation }) {
             y: dy,
           },
           useNativeDriver: true,
-        }).start(removeTopCard);
+        }).start(() => removeTopCard(direction));
       } else {
         Animated.spring(swipe, {
           toValue: {
@@ -82,7 +82,29 @@ export default function HomeScreen({ navigation }) {
     },
   });
 
-  const removeTopCard = useCallback(() => {
+  const removeTopCard = useCallback(async (direction) => {
+    const user = input[0];
+    const token = await SecureStore.getItemAsync("access_token");
+    // console.log(input, "input");
+    // console.log(user._id, "input[0]");
+
+    try {
+      await axios({
+        method: "POST",
+        url: `https://soulconnect-server.habibmufti.online/users/swipe/${user._id}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          swipeStatus: direction === 1 ? "accepted" : "rejected",
+        },
+      });
+      // console.log("success");
+    } catch (error) {
+      console.log(error.response.data);
+      // console.log(error.message || error.response?.data);
+    }
+
     setInput((prevState) => {
       const newState = prevState.slice(1);
       if (newState.length === 0) {
@@ -91,7 +113,7 @@ export default function HomeScreen({ navigation }) {
       return newState;
     });
     swipe.setValue({ x: 0, y: 0 });
-  }, [swipe, initialData]);
+  }, [input, initialData]);
 
   const handleChoice = useCallback(
     (direction) => {
@@ -99,7 +121,7 @@ export default function HomeScreen({ navigation }) {
         toValue: direction * 500,
         duration: 400,
         useNativeDriver: true,
-      }).start(removeTopCard);
+      }).start(() => removeTopCard(direction));
     },
     [removeTopCard, swipe.x]
   );
@@ -124,7 +146,7 @@ export default function HomeScreen({ navigation }) {
               location={user.location}
               gender={user.gender}
               age={user.age}
-              image={user.imgUrl} // Ensure image is set correctly
+              image={user?.imgUrl || "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg"} // Ensure image is set correctly
               isFirst={isFirst}
               swipe={swipe}
               titlSign={titlSign}
