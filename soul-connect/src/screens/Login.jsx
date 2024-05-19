@@ -13,27 +13,30 @@ import * as SecureStore from "expo-secure-store";
 import AuthContext from "../context/auth";
 
 export default function LoginForm({ navigation }) {
-  const [email, setEmail] = useState("user1@mail.com");
-  const [password, setPassword] = useState("user1");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const auth = useContext(AuthContext);
 
   const handleLogin = async () => {
     // Lakukan sesuatu saat tombol login ditekan
     try {
       const response = await axios({
-        method: "POST", 
+        method: "POST",
         url: "https://soulconnect-server.habibmufti.online/users/login",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         data: {
           email: email,
           password: password,
-        }
-      })
+        },
+      });
       await SecureStore.setItemAsync("access_token", response.data.token);
-      auth.setIsSignedIn(true)
-      await SecureStore.setItemAsync("user", JSON.stringify(response.data.user));
+      auth.setIsSignedIn(true);
+      await SecureStore.setItemAsync(
+        "user",
+        JSON.stringify(response.data.user)
+      );
     } catch (error) {
       console.log(error.response.data);
     }
