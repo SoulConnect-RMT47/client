@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,81 +8,40 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 export default function ChatList({ navigation }) {
-  const chatData = [
-    {
-      id: "1",
-      name: "John Doe",
-      bio: "Lorem ipsum dolor sit amet.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "2",
-      name: "Jane Doe",
-      bio: "Nulla facilisi. Integer eu mauris luctus.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "3",
-      name: "Alice Smith",
-      bio: "Pellentesque habitant morbi tristique.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "4",
-      name: "John Doe",
-      bio: "Lorem ipsum dolor sit amet.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "5",
-      name: "Jane Doe",
-      bio: "Nulla facilisi. Integer eu mauris luctus.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "6",
-      name: "Alice Smith",
-      bio: "Pellentesque habitant morbi tristique.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "7",
-      name: "John Doe",
-      bio: "Lorem ipsum dolor sit amet.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "8",
-      name: "Jane Doe",
-      bio: "Nulla facilisi. Integer eu mauris luctus.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-    {
-      id: "9",
-      name: "Alice Smith",
-      bio: "Pellentesque habitant morbi tristique.",
-      imgUrl:
-        "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
-    },
-  ];
+  const [chatList, setChatList] = useState([]);
+
+  useEffect(() => {
+    const fetchChatScreen = async () => {
+      const token = await SecureStore.getItemAsync("access_token");
+      // console.log(token);
+      try {
+        let { data } = await axios({
+          method: "GET",
+          url: `https://soulconnect-server.habibmufti.online/connections`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setChatList(data);
+        // console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchChatScreen();
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Chat</Text>
       <ScrollView>
-        {chatData.map((item) => (
+        {chatList.map((item, i) => (
           <TouchableOpacity
-            key={item.id}
+            key={i}
             style={styles.chatContainer}
             onPress={() =>
               navigation.navigate("ChatDetailScreen", { chat: item })
