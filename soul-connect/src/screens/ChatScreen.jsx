@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -8,31 +7,33 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 export default function ChatList({ navigation }) {
   const [chatList, setChatList] = useState([]);
 
-  useEffect(() => {
-    const fetchChatScreen = async () => {
-      const token = await SecureStore.getItemAsync("access_token");
-      // console.log(token);
-      try {
-        let { data } = await axios({
-          method: "GET",
-          url: `https://soulconnect-server.habibmufti.online/connections`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  const fetchChatScreen = async () => {
+    const token = await SecureStore.getItemAsync("access_token");
+    try {
+      let { data } = await axios({
+        method: "GET",
+        url: `https://soulconnect-server.habibmufti.online/connections`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setChatList(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-        setChatList(data);
-        // console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  useEffect(() => {
     fetchChatScreen();
+    const intervalId = setInterval(fetchChatScreen, 3000); // Fetch data every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);
 
   return (
@@ -81,9 +82,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     padding: 10,
-    backgroundColor: "#ffffff", // Putih
+    backgroundColor: "#ffffff",
     borderRadius: 10,
-    elevation: 3, // Shadow
+    elevation: 3,
   },
   imageContainer: {
     marginRight: 10,
