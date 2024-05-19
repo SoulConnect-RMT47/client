@@ -9,6 +9,7 @@ import {
   Image,
 } from "react-native";
 import axios from "axios";
+import { Alert } from "react-native";
 
 const tags = [
   "Reading",
@@ -69,10 +70,15 @@ export default function SignUpForm({ navigation }) {
           password: password,
           location: location,
           bio: bio,
-          preferences: selectedTags,
+          preference: selectedTags,
         },
       });
-      console.log(response);
+      Alert.alert(
+        "Success",
+        "Registration successful!",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
       navigation.navigate("Login");
     } catch (error) {
       console.log(error.response.data);
