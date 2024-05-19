@@ -8,64 +8,70 @@ import {
   ScrollView,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import axios from "axios";
 
 export default function EditScreen({ navigation }) {
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("");
-  const [age, setAge] = useState("");
-  const [imgUrl, setImgUrl] = useState("");
-
-  const [user, setUser] = useState(null);
-
-  // const [input, setInput] = useState({
-  //   name: "",
-  //   bio: "",
-  //   age: "",
-  //   imgUrl: "",
-  // });
+  const [input, setInput] = useState({
+    name: "",
+    bio: "",
+    age: "",
+    imgUrl: "",
+  });
 
   useEffect(() => {
     const getUser = async () => {
+      const token = await SecureStore.getItemAsync("access_token");
       const user = await SecureStore.getItemAsync("user");
-      setUser(JSON.parse(user));
+      const result = JSON.parse(user);
+      const userId = result._id; // Dapatkan userId dari SecureStore
+
+      try {
+        let { data } = await axios({
+          method: "GET",
+          url: `https://soulconnect-server.habibmufti.online/users/${userId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setInput({
+          name: data.name,
+          bio: data.bio,
+          age: data.age.toString(), // Convert age to string for TextInput
+          imgUrl: data.imgUrl,
+        });
+      } catch (error) {
+        console.log(error.response.data);
+      }
     };
     getUser();
-
-    // if (user._id) {
-    //   async function fetchPostById() {
-    //     try {
-    //       let { data } = await axios({
-    //         method: "GET",
-    //         url:
-    //           "https://soulconnect-server.habibmufti.online/users/" + user._id,
-    //         headers: {
-    //           Authorization: `Bearer ${localStorage.access_token}`,
-    //         },
-    //       });
-    //       console.log(data);
-    //       // setInput({
-    //       //   title: data.data.title,
-    //       //   cover: data.data.cover,
-    //       //   url: data.data.url,
-    //       //   rating: data.data.rating,
-    //       // });
-    //     } catch (error) {
-    //       console.log(error.response.data.message);
-    //       let errMsg = error.response.data.message;
-    //       Swal.fire({
-    //         title: "Error",
-    //         text: errMsg,
-    //         icon: "error",
-    //       });
-    //     }
-    //   }
-    //   fetchPostById();
-    // }
   }, []);
 
-  const handleSave = () => {
-    console.log(name, bio, age, imgUrl);
-    navigation.goBack();
+  const handleChangeInput = (name, value) => {
+    setInput({
+      ...input,
+      [name]: value,
+    });
+  };
+
+  const handleSave = async () => {
+    const token = await SecureStore.getItemAsync("access_token");
+    const user = await SecureStore.getItemAsync("user");
+    const result = JSON.parse(user);
+    // const userId = result._id; // Dapatkan userId dari SecureStore
+    const age = parseFloat(input.age);
+    try {
+      await axios({
+        method: "PUT",
+        url: `https://soulconnect-server.habibmufti.online/users`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: { ...input, age },
+      });
+      navigation.navigate("ProfileScreen");
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
 
   return (
@@ -75,32 +81,33 @@ export default function EditScreen({ navigation }) {
         <Text style={styles.inputLabel}>Name</Text>
         <TextInput
           style={styles.input}
-          value={user?.name}
-          onChangeText={(text) => setName(text)}
+          value={input.name}
+          onChangeText={(value) => handleChangeInput("name", value)}
         />
       </View>
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Bio</Text>
         <TextInput
           style={styles.input}
-          value={user?.bio}
-          onChangeText={(text) => setBio(text)}
+          value={input.bio}
+          onChangeText={(value) => handleChangeInput("bio", value)}
         />
       </View>
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Age</Text>
         <TextInput
           style={styles.input}
-          value={String(user?.age)}
-          onChangeText={(text) => setAge(text)}
+          value={input.age}
+          onChangeText={(value) => handleChangeInput("age", value)}
+          keyboardType="numeric" // Ensure numeric input for age
         />
       </View>
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Image URL</Text>
         <TextInput
           style={styles.input}
-          value={user?.imgUrl}
-          onChangeText={(text) => setImgUrl(text)}
+          value={input.imgUrl}
+          onChangeText={(value) => handleChangeInput("imgUrl", value)}
         />
       </View>
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
