@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     height: height * 0.6,
     borderRadius: 20,
+    backgroundColor: "white",
   },
   gradient: {
     position: "absolute",
