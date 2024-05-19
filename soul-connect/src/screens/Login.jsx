@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import AuthContext from "../context/auth";
+import { Alert } from "react-native";
 
 export default function LoginForm({ navigation }) {
   const [email, setEmail] = useState("");
@@ -37,8 +38,15 @@ export default function LoginForm({ navigation }) {
         "user",
         JSON.stringify(response.data.user)
       );
+      Alert.alert(
+        "Success",
+        "Login successful!",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
     } catch (error) {
       console.log(error.response.data);
+      alert(error.response.data.message);
     }
   };
 
