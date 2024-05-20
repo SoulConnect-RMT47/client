@@ -11,6 +11,12 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebaseDB";
 import { useRoute } from "@react-navigation/native";
+import { LogBox } from "react-native";
+
+// Suppress specific warning
+LogBox.ignoreLogs([
+  "Avatar: Support for defaultProps will be removed from function components in a future major release.",
+]);
 
 export function Chat({ navigation }) {
   const [messages, setMessages] = useState([]);
@@ -32,8 +38,6 @@ export function Chat({ navigation }) {
         }));
 
       setMessages(formatedData);
-
-      // console.log("Current data: ", doc.data());
     });
     return () => unsub();
   }, []);
@@ -68,8 +72,6 @@ export function Chat({ navigation }) {
         _id: parsedUser.username,
         avatar: parsedUser.imgUrl,
       }}
-      // loadEarlier={true}
-      // infiniteScroll={true}
     />
   );
 }
