@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
 import CardLike from "../components/CardLike";
-import { users as usersArray } from "../../dummy/utils/data";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
@@ -28,7 +27,7 @@ export default function LikeScreen() {
     };
 
     getAllLikes();
-  }, []);
+  }, [likes]);
 
   // Mengelompokkan data pengguna ke dalam array 2D (2 kartu per baris)
   const groupedUsers = [];
@@ -40,7 +39,7 @@ export default function LikeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
-        <Text style={{ fontSize: 20 }}>Likes {usersArray.length}</Text>
+        <Text style={{ fontSize: 20 }}>Likes {likes.length}</Text>
       </View>
       <FlatList
         data={groupedUsers}
