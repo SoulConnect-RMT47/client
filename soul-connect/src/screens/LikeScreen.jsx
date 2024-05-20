@@ -1,20 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
 import CardLike from "../components/CardLike";
 import { users as usersArray } from "../../dummy/utils/data";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
 
 export default function LikeScreen() {
+  const [likes, setLikes] = useState([]);
+
+  useEffect(() => {
+    const getAllLikes = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("access_token");
+        if (!token) throw new Error("No access token found");
+
+        const { data } = await axios({
+          method: "GET",
+          url: `https://soulconnect-server.habibmufti.online/swipe`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setLikes(data);
+      } catch (error) {
+        console.log(error.message || error.response?.data);
+      }
+    };
+
+    getAllLikes();
+  }, []);
+
   // Mengelompokkan data pengguna ke dalam array 2D (2 kartu per baris)
   const groupedUsers = [];
   const chunkSize = 2;
-  for (let i = 0; i < usersArray.length; i += chunkSize) {
-    groupedUsers.push(usersArray.slice(i, i + chunkSize));
+  for (let i = 0; i < likes.length; i += chunkSize) {
+    groupedUsers.push(likes.slice(i, i + chunkSize));
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
-      <Text style={{fontSize:20 }} >Likes {usersArray.length}</Text>
+        <Text style={{ fontSize: 20 }}>Likes {usersArray.length}</Text>
       </View>
       <FlatList
         data={groupedUsers}
@@ -22,10 +48,10 @@ export default function LikeScreen() {
           <View style={styles.rowContainer}>
             {item.map((user) => (
               <CardLike
-                key={user.id}
-                title={user.name}
-                description={user.location}
-                imageUrl={user.image}
+                key={user._id}
+                title={user.swipedUser.name}
+                description={user.swipedUser.location}
+                imageUrl={{ uri: user.swipedUser.imgUrl }}
               />
             ))}
           </View>
@@ -42,7 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f0f0f0",
   },
-  subContainer:{
+  subContainer: {
     justifyContent: "center",
     marginLeft: 20,
     marginTop: 5,
