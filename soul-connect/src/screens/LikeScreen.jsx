@@ -6,13 +6,14 @@ import {
   StyleSheet,
   Text,
   ImageBackground,
-} from "react-native"; // Import ImageBackground
+  TouchableOpacity,
+} from "react-native";
 import CardLike from "../components/CardLike";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
-import bg from "../bg.png"; // Import gambar latar belakang
+import bg from "../bg.png";
 
-export default function LikeScreen() {
+export default function LikeScreen({ navigation }) {
   const [likes, setLikes] = useState([]);
 
   useEffect(() => {
@@ -57,12 +58,19 @@ export default function LikeScreen() {
           renderItem={({ item }) => (
             <View style={styles.rowContainer}>
               {item.map((user) => (
-                <CardLike
+                <TouchableOpacity
                   key={user._id}
-                  title={user.swipedUser.name}
-                  description={user.swipedUser.location}
-                  imageUrl={{ uri: user.swipedUser.imgUrl }}
-                />
+                  style={styles.cardContainer}
+                  onPress={() =>
+                    navigation.navigate("UserDetailScreen", { user: user })
+                  }
+                >
+                  <CardLike
+                    title={user.swipedUser.name}
+                    description={user.swipedUser.location}
+                    imageUrl={{ uri: user.swipedUser.imgUrl }}
+                  />
+                </TouchableOpacity>
               ))}
             </View>
           )}
@@ -98,5 +106,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 16,
     marginLeft: 10,
+  },
+  cardContainer: {
+    flex: 1,
+    marginHorizontal: 5,
   },
 });

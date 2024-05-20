@@ -1,28 +1,26 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 const CardLike = ({ title, description, imageUrl }) => {
   return (
     <View style={styles.card}>
-      <TouchableOpacity>
-        <Image source={imageUrl} style={styles.image} />
-        <LinearGradient
-          colors={["transparent", "rgba(0,0,0,0.9)"]}
-          style={styles.gradient}
-        />
-        <View style={styles.textContainer}>
-          <Text style={styles.cardTitle}>{title}</Text>
-          <Text style={styles.cardDescription}>{description}</Text>
-        </View>
-      </TouchableOpacity>
+      <Image source={imageUrl} style={styles.image} resizeMode="cover" />
+      <LinearGradient
+        colors={["transparent", "rgba(0,0,0,0.9)"]}
+        style={styles.gradient}
+      />
+      <View style={styles.textContainer}>
+        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardDescription}>{description}</Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    width: "46%",
+    width: "100%",
     borderRadius: 10,
     overflow: "hidden",
     marginVertical: 8,
@@ -39,8 +37,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 100,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
   },
   textContainer: {
     position: "absolute",

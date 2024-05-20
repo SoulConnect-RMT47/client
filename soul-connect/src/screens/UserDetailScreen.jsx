@@ -1,70 +1,19 @@
-import React, { useContext, useState, useCallback } from "react";
+import { useRoute } from "@react-navigation/native";
+import React from "react";
 import {
   StyleSheet,
   Text,
   View,
   Image,
   TextInput,
-  TouchableOpacity,
   ScrollView,
   ImageBackground,
 } from "react-native";
-import * as SecureStore from "expo-secure-store";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import { useFocusEffect } from "@react-navigation/native";
-import AuthContext from "../context/auth";
-import axios from "axios";
-import bg from "../bg.png"; // Ensure this path is correct
+import bg from "../bg.png";
 
-export default function ProfileScreen({ navigation }) {
-  const auth = useContext(AuthContext);
-
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync("access_token");
-    auth.setIsSignedIn(false);
-  };
-
-  const [input, setInput] = useState({
-    name: "",
-    bio: "",
-    age: "",
-    imgUrl: "",
-    email: "",
-    preference: [],
-  });
-
-  const getUser = useCallback(async () => {
-    const token = await SecureStore.getItemAsync("access_token");
-    const user = await SecureStore.getItemAsync("user");
-    const result = JSON.parse(user);
-    const userId = result._id;
-
-    try {
-      let { data } = await axios({
-        method: "GET",
-        url: `https://soulconnect-server.habibmufti.online/users/${userId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setInput({
-        name: data.name,
-        bio: data.bio,
-        age: data.age.toString(), // Convert age to string for TextInput
-        imgUrl: data.imgUrl,
-        email: data.email,
-        preference: data.preference || [],
-      });
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getUser();
-    }, [getUser])
-  );
+export default function UserDetailScreen() {
+  const route = useRoute();
+  const { user } = route.params;
 
   return (
     <ImageBackground source={bg} style={styles.background}>
@@ -75,27 +24,20 @@ export default function ProfileScreen({ navigation }) {
             style={styles.profileImage}
             source={{
               uri:
-                input?.imgUrl ||
+                user.swipedUser.imgUrl ||
                 "https://i.pinimg.com/236x/9f/b9/df/9fb9df6a24efdc70911dc5b6ec12bc9a.jpg",
             }}
           />
           <Text style={styles.profileName}>
-            {input?.name}, {input?.age}
+            {user.swipedUser.name}, {user.swipedUser.age}
           </Text>
         </View>
         <View style={styles.accountSettings}>
-          <Text style={styles.sectionTitle}>Account Settings</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("EditScreen")}
-            style={styles.editButton}
-          >
-            <Icon name="edit" size={24} color="#555" />
-          </TouchableOpacity>
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Name</Text>
             <TextInput
               style={styles.input}
-              value={input?.name}
+              value={user.swipedUser.name}
               editable={false}
             />
           </View>
@@ -103,7 +45,7 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.inputLabel}>Bio</Text>
             <TextInput
               style={styles.inputMultiline}
-              value={input?.bio}
+              value={user.swipedUser.bio}
               editable={false}
               multiline={true}
               textAlignVertical="top"
@@ -114,7 +56,7 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.inputLabel}>Age</Text>
             <TextInput
               style={styles.input}
-              value={input?.age}
+              value={user.swipedUser.age.toString()}
               editable={false}
             />
           </View>
@@ -122,15 +64,15 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.inputLabel}>Email</Text>
             <TextInput
               style={styles.input}
-              value={input?.email}
+              value={user.swipedUser.email}
               editable={false}
             />
           </View>
-          <View style={styles.inputGroup}>
+          <View style={[styles.inputGroup, styles.preferenceInputGroup]}>
             <Text style={styles.inputLabel}>Preference</Text>
             <TextInput
               style={styles.inputMultiline}
-              value={input.preference.join(", ")}
+              value={user.swipedUser.preference.join(", ")}
               editable={false}
               multiline={true}
               textAlignVertical="top"
@@ -138,9 +80,6 @@ export default function ProfileScreen({ navigation }) {
             />
           </View>
         </View>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Log Out</Text>
-        </TouchableOpacity>
       </ScrollView>
     </ImageBackground>
   );
@@ -189,11 +128,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  editButton: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-  },
   inputGroup: {
     marginBottom: 15,
   },
@@ -220,6 +154,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     marginTop: 5,
     color: "black",
+  },
+  preferenceInputGroup: {
+    marginBottom: 30, // Add bottom margin specifically to the preference input group
   },
   friendListButton: {
     backgroundColor: "#ffffff",

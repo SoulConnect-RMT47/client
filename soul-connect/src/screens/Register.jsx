@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Alert } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const tags = [
   "Reading",
@@ -52,7 +53,6 @@ export default function SignUpForm({ navigation }) {
 
   const handleSignUp = async () => {
     try {
-      console.log(selectedTags);
       const response = await axios({
         method: "POST",
         url: "https://soulconnect-server.habibmufti.online/users/register",
@@ -97,14 +97,7 @@ export default function SignUpForm({ navigation }) {
           onChangeText={setName}
         />
       </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Gender: Male or Female"
-          value={gender}
-          onChangeText={setGender}
-        />
-      </View>
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -156,6 +149,17 @@ export default function SignUpForm({ navigation }) {
           onChangeText={setBio}
           multiline
         />
+      </View>
+      <View style={styles.gender}>
+        <Picker
+          selectedValue={gender}
+          style={styles.input}
+          onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+        >
+          <Picker.Item label="Select Gender" value="" />
+          <Picker.Item label="Male" value="Male" />
+          <Picker.Item label="Female" value="Female" />
+        </Picker>
       </View>
       <Text style={styles.subTitle}>Select Your Preferences</Text>
       <View style={styles.tagsContainer}>
@@ -228,10 +232,21 @@ const styles = StyleSheet.create({
     width: "80%",
     marginBottom: 10,
   },
+  gender: {
+    width: "100%",
+    marginBottom: 10,
+    paddingLeft: 20,
+    alignSelf: "flex-start",
+    borderBottomWidth: 1,
+    borderBottomColor: "#CCCCCC",
+  },
+
   input: {
     borderBottomWidth: 1,
     borderBottomColor: "#CCCCCC",
     paddingVertical: 5,
+    color: "grey",
+    fontSize: 15.5,
   },
   subTitle: {
     fontSize: 18,

@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
-    padding: 10,
+    padding: 8,
     backgroundColor: "rgba(255, 255, 255, 1)", // Membuat kontainer chat semi-transparan
     borderRadius: 10,
     elevation: 3,
@@ -112,6 +112,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   bio: {
-    fontSize: 14,
+    fontSize: 10,
   },
 });
