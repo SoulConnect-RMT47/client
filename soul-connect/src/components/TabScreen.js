@@ -9,6 +9,7 @@ import EditScreen from "../screens/EditScreen";
 import HomeScreen from "../screens/HomeScreen";
 import LikeScreen from "../screens/LikeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import UserDetailScreen from "../screens/UserDetailScreen";
 
 export default function TabScreen() {
   return (
@@ -21,48 +22,56 @@ export default function TabScreen() {
       }}
     >
       <Tab.Screen
-        name='HomeScreen'
+        name="HomeScreen"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name='home-outline' color={color} size={size} />
+            <Ionicons name="home-outline" color={color} size={size} />
           ),
           headerShown: false,
         }}
       />
       <Tab.Screen
-        name='LikeScreen'
+        name="LikeScreen"
         component={LikeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name='heart-outline' color={color} size={size} /> // Mengubah ikon menjadi gambar love
+            <Ionicons name="heart-outline" color={color} size={size} /> // Mengubah ikon menjadi gambar love
           ),
           headerShown: false,
         }}
       />
       <Tab.Screen
-        name='ChatScreen'
+        name="ChatScreen"
         component={ChatScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name='chatbubbles-outline' color={color} size={size} /> // Mengubah ikon menjadi icon chat
+            <Ionicons name="chatbubbles-outline" color={color} size={size} /> // Mengubah ikon menjadi icon chat
           ),
           headerShown: false,
         }}
       />
       <Tab.Screen
-        name='ProfileScreen'
+        name="ProfileScreen"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name='person-outline' color={color} size={size} />
+            <Ionicons name="person-outline" color={color} size={size} />
           ),
           headerShown: false,
         }}
       />
       <Tab.Screen
-        name='EditScreen'
+        name="EditScreen"
         component={EditScreen}
+        options={{
+          headerShown: false,
+          tabBarButton: () => null, // Menyembunyikan tab dari bottom tab
+        }}
+      />
+      <Tab.Screen
+        name="UserDetailScreen"
+        component={UserDetailScreen}
         options={{
           headerShown: false,
           tabBarButton: () => null, // Menyembunyikan tab dari bottom tab
