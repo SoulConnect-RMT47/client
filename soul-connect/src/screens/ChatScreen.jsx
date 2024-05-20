@@ -36,7 +36,7 @@ export default function ChatList({ navigation }) {
 
   useEffect(() => {
     fetchChatScreen();
-  }, []);
+  }, [chatList]);
 
   return (
     <View style={styles.container}>
