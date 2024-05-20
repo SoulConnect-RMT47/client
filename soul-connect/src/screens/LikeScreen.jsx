@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
+import {
+  View,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  ImageBackground,
+} from "react-native"; // Import ImageBackground
 import CardLike from "../components/CardLike";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import bg from "../bg.png"; // Import gambar latar belakang
 
 export default function LikeScreen() {
   const [likes, setLikes] = useState([]);
@@ -37,35 +45,44 @@ export default function LikeScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.subContainer}>
-        <Text style={{ fontSize: 20 }}>Likes {likes.length}</Text>
-      </View>
-      <FlatList
-        data={groupedUsers}
-        renderItem={({ item }) => (
-          <View style={styles.rowContainer}>
-            {item.map((user) => (
-              <CardLike
-                key={user._id}
-                title={user.swipedUser.name}
-                description={user.swipedUser.location}
-                imageUrl={{ uri: user.swipedUser.imgUrl }}
-              />
-            ))}
-          </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.contentContainer}
-      />
-    </SafeAreaView>
+    <ImageBackground source={bg} style={styles.backgroundImage}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.subContainer}>
+          <Text style={{ fontSize: 20, color: "#fff" }}>
+            Likes {likes.length}
+          </Text>
+        </View>
+        <FlatList
+          data={groupedUsers}
+          renderItem={({ item }) => (
+            <View style={styles.rowContainer}>
+              {item.map((user) => (
+                <CardLike
+                  key={user._id}
+                  title={user.swipedUser.name}
+                  description={user.swipedUser.location}
+                  imageUrl={{ uri: user.swipedUser.imgUrl }}
+                />
+              ))}
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.contentContainer}
+        />
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "transparent",
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
   },
   subContainer: {
     justifyContent: "center",

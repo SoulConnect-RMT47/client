@@ -40,12 +40,12 @@ export default function StackScreen() {
         {!isSignedIn ? (
           <>
             <Stack.Screen
-              name='Login'
+              name="Login"
               component={Login}
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name='Register'
+              name="Register"
               component={Register}
               options={{ headerShown: false }}
             />
@@ -53,7 +53,7 @@ export default function StackScreen() {
         ) : (
           <>
             <Stack.Screen
-              name='SoulConnect'
+              name="SoulConnect"
               component={TabScreen}
               options={{
                 headerTintColor: "#007bff",
@@ -68,14 +68,14 @@ export default function StackScreen() {
                   <Image
                     source={logo}
                     style={{ width: 150, height: 40 }} // Sesuaikan ukuran logo sesuai kebutuhan
-                    resizeMode='contain'
+                    resizeMode="contain"
                   />
                 ),
                 // headerTransparent: true,
               }}
             />
             <Stack.Screen
-              name='Chat'
+              name="Chat"
               component={Chat}
               options={{
                 headerTintColor: "#007bff",
@@ -90,7 +90,7 @@ export default function StackScreen() {
                   <Image
                     source={logo}
                     style={{ width: 150, height: 40 }} // Sesuaikan ukuran logo sesuai kebutuhan
-                    resizeMode='contain'
+                    resizeMode="contain"
                   />
                 ),
               }}

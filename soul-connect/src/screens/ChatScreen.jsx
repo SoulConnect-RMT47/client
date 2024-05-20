@@ -5,16 +5,16 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ImageBackground, // Import ImageBackground
   Image,
 } from "react-native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import bg from "../bg.png"; // Import gambar latar belakang
 
 export default function ChatList({ navigation }) {
   const [chatList, setChatList] = useState([]);
   const [user, setUser] = useState({});
-
-  // console.log(user);
 
   const fetchChatScreen = async () => {
     const token = await SecureStore.getItemAsync("access_token");
@@ -39,38 +39,44 @@ export default function ChatList({ navigation }) {
   }, [chatList]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Chat</Text>
-      <ScrollView>
-        {chatList.map((item, i) => (
-          <TouchableOpacity
-            key={i}
-            style={styles.chatContainer}
-            onPress={() =>
-              navigation.navigate("Chat", { chat: item, user: user })
-            }
-          >
-            <View style={styles.imageContainer}>
-              <Image
-                style={styles.profileImage}
-                source={{ uri: item.imgUrl }}
-              />
-            </View>
-            <View style={styles.textContainer}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.bio}>{item.bio}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
+    <ImageBackground
+      source={bg}
+      style={{ flex: 1, resizeMode: "cover", padding: 20 }} // Menambahkan padding agar konten tidak tertutup oleh gambar latar belakang
+    >
+      <View style={styles.container}>
+        <Text style={styles.header}>Chat</Text>
+        <ScrollView>
+          {chatList.map((item, i) => (
+            <TouchableOpacity
+              key={i}
+              style={styles.chatContainer}
+              onPress={() =>
+                navigation.navigate("Chat", { chat: item, user: user })
+              }
+            >
+              <View style={styles.imageContainer}>
+                <Image
+                  style={styles.profileImage}
+                  source={{ uri: item.imgUrl }}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.bio}>{item.bio}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0)", // Membuat latar belakang semi-transparan
+    borderRadius: 10,
     padding: 20,
   },
   header: {
@@ -78,13 +84,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    color: "#fff",
   },
   chatContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
     padding: 10,
-    backgroundColor: "#ffffff",
+    backgroundColor: "rgba(255, 255, 255, 1)", // Membuat kontainer chat semi-transparan
     borderRadius: 10,
     elevation: 3,
   },

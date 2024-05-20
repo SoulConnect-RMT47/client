@@ -6,9 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  ImageBackground, // Import ImageBackground
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import bg from "../bg.png"; // Import gambar latar belakang
 
 export default function EditScreen({ navigation }) {
   const [input, setInput] = useState({
@@ -75,52 +77,57 @@ export default function EditScreen({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Edit</Text>
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>Name</Text>
-        <TextInput
-          style={styles.input}
-          value={input.name}
-          onChangeText={(value) => handleChangeInput("name", value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>Bio</Text>
-        <TextInput
-          style={styles.input}
-          value={input.bio}
-          onChangeText={(value) => handleChangeInput("bio", value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>Age</Text>
-        <TextInput
-          style={styles.input}
-          value={input.age}
-          onChangeText={(value) => handleChangeInput("age", value)}
-          keyboardType="numeric" // Ensure numeric input for age
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>Image URL</Text>
-        <TextInput
-          style={styles.input}
-          value={input.imgUrl}
-          onChangeText={(value) => handleChangeInput("imgUrl", value)}
-        />
-      </View>
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Save</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    <ImageBackground
+      source={bg}
+      style={{ flex: 1, resizeMode: "cover", padding: 20 }} // Menambahkan padding agar konten tidak tertutup oleh gambar latar belakang
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.header}>Edit</Text>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Name</Text>
+          <TextInput
+            style={styles.input}
+            value={input.name}
+            onChangeText={(value) => handleChangeInput("name", value)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Bio</Text>
+          <TextInput
+            style={styles.input}
+            value={input.bio}
+            onChangeText={(value) => handleChangeInput("bio", value)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Age</Text>
+          <TextInput
+            style={styles.input}
+            value={input.age}
+            onChangeText={(value) => handleChangeInput("age", value)}
+            keyboardType="numeric" // Ensure numeric input for age
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Image URL</Text>
+          <TextInput
+            style={styles.input}
+            value={input.imgUrl}
+            onChangeText={(value) => handleChangeInput("imgUrl", value)}
+          />
+        </View>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "transparent", // Ubah background menjadi transparent agar gambar latar belakang terlihat
     padding: 20,
   },
   header: {
@@ -128,13 +135,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    color: "#fff", // Ubah warna teks menjadi putih
   },
   inputGroup: {
     marginBottom: 15,
   },
   inputLabel: {
     fontSize: 14,
-    color: "#333",
+    color: "#fff", // Ubah warna teks menjadi putih
     marginBottom: 5,
   },
   input: {
@@ -143,7 +151,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fff", // Ubah warna background input menjadi putih
   },
   saveButton: {
     backgroundColor: "#AA3FEC",
