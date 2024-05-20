@@ -17,6 +17,8 @@ import axios from "axios";
 import bg from "../bg.png"; // Ensure this path is correct
 
 export default function ProfileScreen({ navigation }) {
+  const [user, setUser] = useState(null);
+
   const auth = useContext(AuthContext);
 
   const handleLogout = async () => {
