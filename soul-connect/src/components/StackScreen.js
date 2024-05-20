@@ -8,6 +8,7 @@ import { Image } from "react-native";
 import { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import AuthContext from "../context/auth.js";
+import { Chat } from "../screens/Chat.jsx";
 
 export default function StackScreen() {
   const [user, setUser] = useState(null);
@@ -37,41 +38,65 @@ export default function StackScreen() {
     >
       <Stack.Navigator>
         {!isSignedIn ? (
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
+          <>
+            <Stack.Screen
+              name='Login'
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='Register'
+              component={Register}
+              options={{ headerShown: false }}
+            />
+          </>
         ) : (
-          <Stack.Screen
-            name="SoulConnect"
-            component={TabScreen}
-            options={{
-              headerTintColor: "#007bff",
-              headerTitleStyle: {
-                fontSize: 30,
-                fontWeight: "bold",
-              },
-              headerShown: true,
-              headerBackVisible: false,
-              headerTitleAlign: "center",
-              headerTitle: () => (
-                <Image
-                  source={logo}
-                  style={{ width: 150, height: 40 }} // Sesuaikan ukuran logo sesuai kebutuhan
-                  resizeMode="contain"
-                />
-              ),
-              // headerTransparent: true,
-            }}
-          />
+          <>
+            <Stack.Screen
+              name='SoulConnect'
+              component={TabScreen}
+              options={{
+                headerTintColor: "#007bff",
+                headerTitleStyle: {
+                  fontSize: 30,
+                  fontWeight: "bold",
+                },
+                headerShown: true,
+                headerBackVisible: false,
+                headerTitleAlign: "center",
+                headerTitle: () => (
+                  <Image
+                    source={logo}
+                    style={{ width: 150, height: 40 }} // Sesuaikan ukuran logo sesuai kebutuhan
+                    resizeMode='contain'
+                  />
+                ),
+                // headerTransparent: true,
+              }}
+            />
+            <Stack.Screen
+              name='Chat'
+              component={Chat}
+              options={{
+                headerTintColor: "#007bff",
+                headerTitleStyle: {
+                  fontSize: 30,
+                  fontWeight: "bold",
+                },
+                headerShown: true,
+                headerBackVisible: false,
+                headerTitleAlign: "center",
+                headerTitle: () => (
+                  <Image
+                    source={logo}
+                    style={{ width: 150, height: 40 }} // Sesuaikan ukuran logo sesuai kebutuhan
+                    resizeMode='contain'
+                  />
+                ),
+              }}
+            />
+          </>
         )}
-
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ headerShown: false }}
-        />
       </Stack.Navigator>
     </AuthContext.Provider>
   );

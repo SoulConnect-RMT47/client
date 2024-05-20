@@ -12,9 +12,13 @@ import * as SecureStore from "expo-secure-store";
 
 export default function ChatList({ navigation }) {
   const [chatList, setChatList] = useState([]);
+  const [user, setUser] = useState({});
+
+  // console.log(user);
 
   const fetchChatScreen = async () => {
     const token = await SecureStore.getItemAsync("access_token");
+    const user = await SecureStore.getItemAsync("user");
     try {
       let { data } = await axios({
         method: "GET",
@@ -24,6 +28,7 @@ export default function ChatList({ navigation }) {
         },
       });
       setChatList(data);
+      setUser(user);
     } catch (error) {
       console.log(error);
     }
@@ -31,9 +36,6 @@ export default function ChatList({ navigation }) {
 
   useEffect(() => {
     fetchChatScreen();
-    const intervalId = setInterval(fetchChatScreen, 3000); // Fetch data every 5 seconds
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);
 
   return (
@@ -45,7 +47,7 @@ export default function ChatList({ navigation }) {
             key={i}
             style={styles.chatContainer}
             onPress={() =>
-              navigation.navigate("ChatDetailScreen", { chat: item })
+              navigation.navigate("Chat", { chat: item, user: user })
             }
           >
             <View style={styles.imageContainer}>
