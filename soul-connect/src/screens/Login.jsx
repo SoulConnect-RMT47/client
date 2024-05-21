@@ -56,7 +56,7 @@ export default function LoginForm({ navigation }) {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder='Email'
           value={email}
           onChangeText={setEmail}
         />
@@ -64,7 +64,7 @@ export default function LoginForm({ navigation }) {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder='Password'
           value={password}
           onChangeText={setPassword}
           secureTextEntry
