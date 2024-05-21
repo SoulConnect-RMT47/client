@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { View, StyleSheet } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import {
   collection,
@@ -65,13 +66,24 @@ export function Chat({ navigation }) {
   }, []);
 
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={(messages) => onSend(messages)}
-      user={{
-        _id: parsedUser.username,
-        avatar: parsedUser.imgUrl,
-      }}
-    />
+    <View style={styles.container}>
+      <GiftedChat
+        messages={messages}
+        onSend={(messages) => onSend(messages)}
+        user={{
+          _id: parsedUser.username,
+          name: parsedUser.name,
+          avatar: parsedUser.imgUrl,
+        }}
+        renderUsernameOnMessage={true}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+});
