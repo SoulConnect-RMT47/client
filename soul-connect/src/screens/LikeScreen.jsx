@@ -42,7 +42,12 @@ export default function LikeScreen({ navigation }) {
   const groupedUsers = [];
   const chunkSize = 2;
   for (let i = 0; i < likes.length; i += chunkSize) {
-    groupedUsers.push(likes.slice(i, i + chunkSize));
+    const chunk = likes.slice(i, i + chunkSize);
+    if (chunk.length < chunkSize) {
+      // Add a placeholder object if the chunk is less than chunkSize
+      chunk.push({ _id: `placeholder-${i}`, placeholder: true });
+    }
+    groupedUsers.push(chunk);
   }
 
   return (
@@ -57,21 +62,28 @@ export default function LikeScreen({ navigation }) {
           data={groupedUsers}
           renderItem={({ item }) => (
             <View style={styles.rowContainer}>
-              {item.map((user) => (
-                <TouchableOpacity
-                  key={user._id}
-                  style={styles.cardContainer}
-                  onPress={() =>
-                    navigation.navigate("UserDetailScreen", { user: user })
-                  }
-                >
-                  <CardLike
-                    title={user.swipedUser.name}
-                    description={user.swipedUser.location}
-                    imageUrl={{ uri: user.swipedUser.imgUrl }}
+              {item.map((user) =>
+                user.placeholder ? (
+                  <View
+                    key={user._id}
+                    style={[styles.cardContainer, styles.placeholder]}
                   />
-                </TouchableOpacity>
-              ))}
+                ) : (
+                  <TouchableOpacity
+                    key={user._id}
+                    style={styles.cardContainer}
+                    onPress={() =>
+                      navigation.navigate("UserDetailScreen", { user: user })
+                    }
+                  >
+                    <CardLike
+                      title={user.swipedUser.name}
+                      description={user.swipedUser.location}
+                      imageUrl={{ uri: user.swipedUser.imgUrl }}
+                    />
+                  </TouchableOpacity>
+                )
+              )}
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -110,5 +122,8 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     marginHorizontal: 5,
+  },
+  placeholder: {
+    backgroundColor: "transparent",
   },
 });
