@@ -97,13 +97,13 @@ const Card = ({
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 30,
+    top: 75,
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 10,
-    borderColor: "black"
+    borderColor: "black",
   },
   image: {
     width: width * 0.8,
